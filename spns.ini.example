@@ -1,0 +1,116 @@
+[db]
+
+# The postgresql database URL
+url = postgresql:///pns
+
+[log]
+
+# Log level
+level = INFO
+
+[hivemind]
+
+# The socket we listen on, that other parts of the PN service use to communicate with the central "hivemind" process
+listen = ipc://./hivemind.sock
+
+# Optional encrypted TCP curve listener
+#listen_curve = tcp://0.0.0.0:22030
+
+# One or more admin x25519 pubkeys (comma-separated) for the listen_curve address; you can specify
+# multiple by separating by whitespace or commas.  Any listed pubkeys will have admin access when
+# connecting to the listen_curve address.
+listen_curve_admin = 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+
+# OMQ address where we can make RPC requests to beldexd.  This can be a local beldexd (e.g.
+# ipc:///path/to/beldexd.sock), a plaintext address, or a curve-encrypted address with pubkey.
+beldexd_rpc = tcp://localhost:19090
+
+# How often (in seconds) the main process re-checks existing subscriptions (for push renewals, expiries, etc.)
+subs_interval = 10
+
+# How many SN connections we attempt to establish at once.  Can be large to make a huge burst of
+# connections at startup, or lower to pace those connections a little more.
+max_connects = 1000
+
+# We use a time-based filter on notifications to avoid sending duplicate notifications; this timer
+# controls the minimum time for which we will filter duplicates.  (In practice, the filter will
+# often last somewhat longer than this, but this is the minimum).
+filter_lifetime = 300
+
+# How many separate oxenmq instances to start to talk to network service nodes.  Increasing this can
+# be helpful if a single oxenmq instance (typically the proxy thread) starts bottlenecking under
+# heavy load.  If this is set to 1 or greater then this many extra servers are started and each
+# connection to a remote service node is assigned in round-robin order across the instances, while
+# the main local oxenmq instance will be used only for non-push requests (subscriptions, timers,
+# communication with notifiers, local admin stats endpoints, etc.).  If unset or set to 0 then just
+# one oxenmq instance will be used for everything (both local and push traffic).
+#omq_push_instances = 4
+
+# How long the main hivemind process will wait at startup before establishing connections to
+# the network's service nodes.  This delay is designed to allow subordinate notification processes
+# to connect to the hivemind to ensure that notification services are ready after a restart before
+# we subscribe (and start receiving) message notifications.
+startup_wait = 8.0
+
+# Comma-separate list of expected notifier names; if non-empty then while starting up, the
+# `startup_wait` timer becomes a maximum wait time: we start up as soon as the timer is reached *or*
+# we have received notifier registrations for all the notifiers listed here.  (Note that even when
+# this is set other notifiers can still register, they just aren't required for startup to proceed).
+#notifiers_expected = apns,firebase
+
+
+[keys]
+
+# This section lists the files containing keys needed by the PN server.  Each file is the 32-bytes
+# private key, either in binary or as a single 64-character hex string.
+#
+# You can generate these X25519 keys using:
+#
+#     ./make-x25519-key.py FILENAME
+#
+
+hivemind = key_x25519
+
+onionreq = onionreq_x25519
+
+
+[notify-firebase]
+
+# Magic json token file google spits out from somewhere deep in the firebase admin control panel
+#token_file = loki-a1a1a-firebase-adminsdk-blahblah-1234567890.json
+
+# How many times we will attempt to re-send notification on failure
+retries = 3
+
+# Interval (seconds) between retry attempts
+retry_interval = 10
+
+# How frequently (in seconds) we send notification requests
+notify_interval = 0.1
+
+[notify-apns]
+# Application identifier, aka "topic".  Required when using apns.
+identifier = com.loki-project.loki-messenger
+
+# Filename containing the APNS client certificate.  Required when using apns.
+cert_file = apns-cert.pem
+
+# How many times we will attempt to re-send notification on failure
+retries = 2
+
+# Interval (seconds) between retry attempts
+retry_interval = 3
+
+
+[notify-apns-sandbox]
+# Application identifier, aka "topic".  Required when using apns.
+identifier = com.loki-project.loki-messenger
+
+# Filename containing the APNS client certificate.  Required when using apns.
+cert_file = apns-sandbox-cert.pem
+
+# How many times we will attempt to re-send notification on failure
+retries = 0
+
+# Interval (seconds) between retry attempts
+retry_interval = 3

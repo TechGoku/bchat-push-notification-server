@@ -1,0 +1,19 @@
+[Unit]
+Description=Bchat Push Notification Server -- %i notifier
+After=network-online.target
+Wants=pns-hivemind.service
+After=pns-hivemind.service
+PartOf=pns.target
+
+[Service]
+User=push
+Group=_beldex
+Type=notify
+WatchdogSec=1min
+WorkingDirectory=/home/push/bchat-push-notification-server
+Restart=always
+RestartSec=5s
+ExecStart=/usr/bin/python3 -mpns.notifiers.%i
+
+[Install]
+WantedBy=multi-user.target
