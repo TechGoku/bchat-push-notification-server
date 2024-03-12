@@ -1,6 +1,6 @@
 
-.PHONY: spns clean
-spns:
+.PHONY: pns clean
+pns:
 ifeq (,$(wildcard ./build))
 	mkdir -p build
 	cmake -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release \
@@ -11,4 +11,4 @@ endif
 	$(MAKE) -C build
 
 clean:
-	rm -rf build spns/core.cpython*.so
+	rm -rf build pns/core.cpython*.so

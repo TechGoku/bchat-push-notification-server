@@ -13,21 +13,21 @@ if(CCACHE_PROGRAM)
   endforeach()
 endif()
 
-project(spns)
+project(pns)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_library(spns STATIC
-    spns/hivemind.cpp
-    spns/pg.cpp
-    spns/swarmpubkey.cpp
-    spns/utils.cpp
-    spns/hive/signature.cpp
-    spns/hive/snode.cpp
-    spns/hive/subscription.cpp
+add_library(pns STATIC
+    pns/hivemind.cpp
+    pns/pg.cpp
+    pns/swarmpubkey.cpp
+    pns/utils.cpp
+    pns/hive/signature.cpp
+    pns/hive/snode.cpp
+    pns/hive/subscription.cpp
 )
 
 find_package(PkgConfig REQUIRED)
@@ -86,7 +86,7 @@ add_subdirectory(oxen-logging)
 
 add_subdirectory(libpqxx EXCLUDE_FROM_ALL)
 
-target_link_libraries(spns PRIVATE
+target_link_libraries(pns PRIVATE
     PkgConfig::SODIUM
     PkgConfig::OXENC
     PkgConfig::OXENMQ
@@ -95,14 +95,14 @@ target_link_libraries(spns PRIVATE
     pqxx
     oxen::logging)
 
-set_target_properties(spns PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
+set_target_properties(pns PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
 
 set(PYBIND11_FINDPYTHON ON CACHE INTERNAL "")
 add_subdirectory(pybind11)
 pybind11_add_module(
     core
-    spns/pybind.cpp)
+    pns/pybind.cpp)
 
-target_link_libraries(core PUBLIC spns)
+target_link_libraries(core PUBLIC pns)
 set_target_properties(core PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/spns)
+    LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/pns)
