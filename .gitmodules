@@ -1,3 +1,6 @@
 [submodule "libpqxx"]
 	path = libpqxx
 	url = https://github.com/jtv/libpqxx.git
+[submodule "oxen-logging"]
+	path = oxen-logging
+	url = https://github.com/oxen-io/oxen-logging.git
