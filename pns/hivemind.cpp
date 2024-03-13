@@ -1278,14 +1278,14 @@ void HiveMind::db_cleanup() {
 void HiveMind::refresh_sns() {
     omq_.request(
             beldexd_,
-            "rpc.get_service_nodes",
+            "rpc.get_master_nodes",
             [this](bool success, std::vector<std::string> data) {
                 if (success) {
                     on_sns_response(std::move(data));
                 } else {
                     log::warning(
                             cat,
-                            "get_service_nodes request failed: {}",
+                            "get_master_nodes request failed: {}",
                             "{}"_format(fmt::join(data, " ")));
                 }
             },
@@ -1297,14 +1297,14 @@ void HiveMind::on_sns_response(std::vector<std::string> data) {
         if (data.size() != 2) {
             log::warning(
                     cat,
-                    "rpc.get_service_nodes returned unexpected {}-length response",
+                    "rpc.get_master_nodes returned unexpected {}-length response",
                     data.size());
             return;
         }
         if (data[0] != "200") {
             log::warning(
                     cat,
-                    "rpc.get_service_nodes returned unexpected response {}: {}",
+                    "rpc.get_master_nodes returned unexpected response {}: {}",
                     data[0],
                     data[1]);
             return;
@@ -1314,7 +1314,7 @@ void HiveMind::on_sns_response(std::vector<std::string> data) {
         try {
             res = nlohmann::json::parse(data[1]);
         } catch (const nlohmann::json::exception& e) {
-            log::warning(cat, "Failed to parse rpc.get_service_nodes response: {}", e.what());
+            log::warning(cat, "Failed to parse rpc.get_master_nodes response: {}", e.what());
             return;
         }
 
@@ -1322,7 +1322,7 @@ void HiveMind::on_sns_response(std::vector<std::string> data) {
         if (!sn_st.is_array()) {
             log::warning(
                     cat,
-                    "Unexpected rpc.get_service_nodes response: service_node_states looks "
+                    "Unexpected rpc.get_master_nodes response: service_node_states looks "
                     "wrong");
             return;
         }
