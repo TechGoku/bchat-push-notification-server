@@ -1318,11 +1318,11 @@ void HiveMind::on_sns_response(std::vector<std::string> data) {
             return;
         }
 
-        auto sn_st = res["service_node_states"];
+        auto sn_st = res["master_node_states"];
         if (!sn_st.is_array()) {
             log::warning(
                     cat,
-                    "Unexpected rpc.get_master_nodes response: service_node_states looks "
+                    "Unexpected rpc.get_master_nodes response: master_node_states looks "
                     "wrong");
             return;
         }
