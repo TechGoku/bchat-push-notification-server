@@ -19,14 +19,14 @@ SwarmPubkey::SwarmPubkey(AccountID account_id, std::optional<Ed25519PK> ed, bool
         id{std::move(account_id)}, swarm_space{calc_swarm_space(id)} {
 
     if (ed) {
-        if (id.front() != std::byte{0xbd})
+        if (id.front() != std::byte{189})
             throw std::invalid_argument{
                     "session_ed25519 may only be used with bd-prefixed bchat IDs"};
         ed25519 = std::move(*ed);
         session_ed = true;
         if (!_skip_validation) {
             AccountID derived_pk;
-            derived_pk[0] = std::byte{0xbd};
+            derived_pk[0] = std::byte{189};
             int rc = crypto_sign_ed25519_pk_to_curve25519(
                     static_cast<unsigned char*>(derived_pk) + 1, ed25519);
             if (rc != 0)

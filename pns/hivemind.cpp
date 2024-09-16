@@ -1062,7 +1062,7 @@ HiveMind::sub_unsub_args(nlohmann::json& args) {
 
     auto account = from_hex_or_b64<AccountID>(args.at("pubkey").get<std::string_view>());
     std::optional<Ed25519PK> session_ed;
-    if (account[0] == static_cast<std::byte>(0xbd))
+    if (account[0] == static_cast<std::byte>(189))
         from_hex_or_b64(session_ed.emplace(), args.at("session_ed25519").get<std::string_view>());
     // SwarmPubkey pubkey{std::move(account), std::move(session_ed)};
     std::optional<Subaccount> subaccount;
