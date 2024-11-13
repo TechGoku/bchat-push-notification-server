@@ -117,7 +117,7 @@ inline const std::string type_name<pns::Signature>{"pns::Signature"};
 template <>
 inline const std::string type_name<pns::EncKey>{"pns::EncKey"};
 
-template <spns::bytes_subtype T>
+template <pns::bytes_subtype T>
 struct pns_byte_helper {
     static constexpr size_t SIZE = T::SIZE;
     static T from_string(std::string_view text) {
