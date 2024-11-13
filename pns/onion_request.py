@@ -76,7 +76,7 @@ def decrypt_onionreq():
     except Exception as e:
         app.logger.warning("Failed to decrypt onion request: {}".format(e))
     abort(http.BAD_REQUEST)
-@app.post("/oxen/v4/lsrpc")
+@app.post("/beldex/v4/lsrpc")
 def handle_v4_onion_request():
     """
     Handles a decrypted v4 onion request; this injects a subrequest to process it then returns the
