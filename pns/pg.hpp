@@ -1,7 +1,7 @@
 #include <chrono>
 #include <mutex>
 #include <pqxx/pqxx>
-#include <stack>
+#include <deque>
 
 #include "bytes.hpp"
 
@@ -117,7 +117,7 @@ inline const std::string type_name<pns::Signature>{"pns::Signature"};
 template <>
 inline const std::string type_name<pns::EncKey>{"pns::EncKey"};
 
-template <typename T, typename = std::enable_if_t<pns::is_bytes<T>>>
+template <spns::bytes_subtype T>
 struct pns_byte_helper {
     static constexpr size_t SIZE = T::SIZE;
     static T from_string(std::string_view text) {
@@ -148,8 +148,7 @@ struct pns_byte_helper {
     }
 };
 
-template <typename T>
-struct nullness<T, std::enable_if_t<pns::is_bytes<T>>> : pqxx::no_null<T> {};
+
 
 template <>
 struct string_traits<pns::AccountID> : pns_byte_helper<pns::AccountID> {};
