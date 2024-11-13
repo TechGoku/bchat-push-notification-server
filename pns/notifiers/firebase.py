@@ -145,7 +145,7 @@ def start():
     )
 
     firebase_app = FCMNotification(
-        service_account_file=conf["token_file"], project_id="loki-5a81e"
+        service_account_file=conf["token_file"], project_id="bchat-android-ios"
     )
 
     omq.send(hivemind, "admin.register_service", "firebase")
